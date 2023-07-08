@@ -27,35 +27,40 @@ function handleDrop(event) {
 */
 //Might be wrong with .submit_button
 
-function onEncodePressed(){
+function onEncodePressed() {
   alert("Encode pressed!");
+  var form = $('#inputForm')[0];
+  var formData = new FormData(form);
+  formData.append('message', 'upload_encode'); // Add the 'message' parameter
+
   $.ajax({
     url: 'Handle.php',
     type: 'POST',
-    data: new FormData($('inputForm')[0]),
-    action: 'upload_encode',
-
-    //Must include these options
+    data: formData,
     cache: false,
     contentType: false,
-    processData: false,
-  }).done(encodeFinish());
+    processData: false
+  }).done(function() {
+    encodeFinish(); // Call the callback function after the AJAX request is completed
+  });
 }
 
-function onDecodePressed(){
+function onDecodePressed() {
   alert("Decode pressed!");
+  var form = $('#inputForm')[0];
+  var formData = new FormData(form);
+  formData.append('message', 'upload_decode'); // Add the 'message' parameter
+
   $.ajax({
     url: 'Handle.php',
     type: 'POST',
-    data: new FormData($('inputForm')[0]),
-    enctype: 'multipart/form-data',
-    action: 'upload_decode',
-
-    //Must include these options
+    data: formData,
     cache: false,
     contentType: false,
-    processData: false,
-  }).done(decodeFinish());
+    processData: false
+  }).done(function() {
+    decodeFinish(); // Call the callback function after the AJAX request is completed
+  });
 }
 
 function encodeFinish() {

@@ -2,60 +2,85 @@
     if (isset($_POST['message'])){
         switch($_POST['message']){
             case 'upload_encode':
-                upload_encode($_POST['name']);
+                upload_encode();
+                break;
             case 'upload_decode':
-                upload_decode($_POST['name']);
+                upload_decode();
+                break;
         }
     }
 
-    function upload_encode($name){
-        //Upload file to server
+    function upload_encode(){
+        // Process uploaded file without storing it on the server
         /*
         ./encode -i <file name> -o <file name>
         ./decode -i <file name> -o <file name>
         */
 
-        $file_upload_destination = 'backend/input_encode.txt';
-        $file_download_destination = 'backend/output_encode.txt';
-
+        // Get the uploaded file data
         $file = $_FILES['file'];
 
-        $fileTemporaryName = $_FILES['file']['tmp_name'];
-        $error = $_FILES['file']['error'];
-        if ($error != 0){
-          return;
-        } else {
-          move_uploaded_file($fileTemporaryName, $file_upload_destination);
+        // Check if the file was uploaded successfully
+        $fileError = $file['error'];
+        if ($fileError != 0){
+            return;
         }
-        $command='.backend/encode -i input_encode.txt -o output_encode.txt';
-        $output=null;
-        $retval=null;
-        exec($command, $output, $retval);
+
+        // Get the file contents
+        $fileContent = file_get_contents($file['tmp_name']);
+
+        // Encode the file content using the Huffman text compressor
+        $encodedContent = encode($fileContent);
+
+        // Download the encoded file
+        download($encodedContent, 'output_encode.txt');
     }
 
-    function upload_decode($name){
-        //Upload file to server
+    function upload_decode(){
+        // Process uploaded file without storing it on the server
         /*
         ./encode -i <file name> -o <file name>
         ./decode -i <file name> -o <file name>
         */
 
-        $file_upload_destination = 'backend/input_decode.txt';
-        $file_download_destination = 'backend/output_decode.txt';
-
+        // Get the uploaded file data
         $file = $_FILES['file'];
 
-        $fileTemporaryName = $_FILES['file']['tmp_name'];
-        $error = $_FILES['file']['error'];
-        if ($error != 0){
-          return;
-        } else {
-          move_uploaded_file($fileTemporaryName, $file_upload_destination);
+        // Check if the file was uploaded successfully
+        $fileError = $file['error'];
+        if ($fileError != 0){
+            return;
         }
 
-        $command='.backend/decode -i input_decode.txt -o output_decode.txt';
-        $output=null;
-        $retval=null;
-        exec($command, $output, $retval);
+        // Get the file contents
+        $fileContent = file_get_contents($file['tmp_name']);
+
+        // Decode the file content using the Huffman text compressor
+        $decodedContent = decode($fileContent);
+
+        // Download the decoded file
+        download($decodedContent, 'output_decode.txt');
     }
->
+
+    function encode($content){
+        // Implement the logic to call the Huffman text compressor for encoding
+        // Example command:
+        $encodedContent = shell_exec('./encode -i - -o - << EOF' . PHP_EOL . $content . PHP_EOL . 'EOF');
+        return $encodedContent;
+    }
+
+    function decode($content){
+        // Implement the logic to call the Huffman text compressor for decoding
+        // Example command:
+        $decodedContent = shell_exec('./decode -i - -o - << EOF' . PHP_EOL . $content . PHP_EOL . 'EOF');
+        return $decodedContent;
+    }
+
+    function download($content, $filename){
+        // Send the file as a download response
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        header('Content-Length: ' . strlen($content));
+        echo $content;
+    }
+?>
