@@ -27,54 +27,43 @@ function handleDrop(event) {
 */
 //Might be wrong with .submit_button
 
-function onEncodePressed() {
+function onEncodePressed(){
   alert("Encode pressed!");
-  var form = $('#inputForm')[0];
-  var formData = new FormData(form);
-  formData.append('message', 'upload_encode'); // Add the 'message' parameter
-
   $.ajax({
     url: 'Handle.php',
     type: 'POST',
-    data: formData,
+    data: new FormData($('inputForm')[0]),
+    action: 'upload_encode',
+
+    //Must include these options
     cache: false,
     contentType: false,
-    processData: false
-  }).done(function() {
-    encodeFinish(); // Call the callback function after the AJAX request is completed
-  });
+    processData: false,
+  }).done(encodeFinish());
 }
 
-function onDecodePressed() {
+function onDecodePressed(){
   alert("Decode pressed!");
-  var form = $('#inputForm')[0];
-  var formData = new FormData(form);
-  formData.append('message', 'upload_decode'); // Add the 'message' parameter
-
   $.ajax({
     url: 'Handle.php',
     type: 'POST',
-    data: formData,
+    data: new FormData($('inputForm')[0]),
+    enctype: 'multipart/form-data',
+    action: 'upload_decode',
+
+    //Must include these options
     cache: false,
     contentType: false,
-    processData: false
-  }).done(function() {
-    decodeFinish(); // Call the callback function after the AJAX request is completed
-  });
+    processData: false,
+  }).done(decodeFinish());
 }
 
 function encodeFinish() {
-  // Perform actions after encode completion
-  var downloadLink = document.createElement('a');
-  downloadLink.href = 'backend/output_encode.txt';
-  downloadLink.download = 'compressed_file.txt';
-  downloadLink.click();
+  //Call on ajax return for encode finish
+  //link -- backend/output_encode.txt
 }
 
 function decodeFinish() {
-  // Perform actions after decode completion
-  var downloadLink = document.createElement('a');
-  downloadLink.href = 'backend/output_decode.txt';
-  downloadLink.download = 'decompressed_file.txt';
-  downloadLink.click();
+  //Call on ajax return for decode finish
+  //link -- backend/output_decode.txt
 }

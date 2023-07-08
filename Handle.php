@@ -3,15 +3,13 @@
         switch($_POST['message']){
             case 'upload_encode':
                 upload_encode($_POST['name']);
-                break; // Add a break statement after each case
             case 'upload_decode':
                 upload_decode($_POST['name']);
-                break; // Add a break statement after each case
         }
     }
 
     function upload_encode($name){
-        // Upload file to server
+        //Upload file to server
         /*
         ./encode -i <file name> -o <file name>
         ./decode -i <file name> -o <file name>
@@ -25,22 +23,18 @@
         $fileTemporaryName = $_FILES['file']['tmp_name'];
         $error = $_FILES['file']['error'];
         if ($error != 0){
-            return;
+          return;
         } else {
-            move_uploaded_file($fileTemporaryName, $file_upload_destination);
+          move_uploaded_file($fileTemporaryName, $file_upload_destination);
         }
-
-        $command = '.backend/encode -i input_encode.txt -o output_encode.txt';
-        $output = null;
-        $retval = null;
+        $command='.backend/encode -i input_encode.txt -o output_encode.txt';
+        $output=null;
+        $retval=null;
         exec($command, $output, $retval);
-
-        // Send the download link as response
-        echo $file_download_destination;
     }
 
     function upload_decode($name){
-        // Upload file to server
+        //Upload file to server
         /*
         ./encode -i <file name> -o <file name>
         ./decode -i <file name> -o <file name>
@@ -54,17 +48,14 @@
         $fileTemporaryName = $_FILES['file']['tmp_name'];
         $error = $_FILES['file']['error'];
         if ($error != 0){
-            return;
+          return;
         } else {
-            move_uploaded_file($fileTemporaryName, $file_upload_destination);
+          move_uploaded_file($fileTemporaryName, $file_upload_destination);
         }
 
-        $command = '.backend/decode -i input_decode.txt -o output_decode.txt';
-        $output = null;
-        $retval = null;
+        $command='.backend/decode -i input_decode.txt -o output_decode.txt';
+        $output=null;
+        $retval=null;
         exec($command, $output, $retval);
-
-        // Send the download link as response
-        echo $file_download_destination;
     }
-?>
+>
