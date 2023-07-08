@@ -64,11 +64,17 @@ function onDecodePressed() {
 }
 
 function encodeFinish() {
-  //Call on ajax return for encode finish
-  //link -- backend/output_encode.txt
+  // Perform actions after encode completion
+  var downloadLink = document.createElement('a');
+  downloadLink.href = 'backend/output_encode.txt';
+  downloadLink.download = 'compressed_file.txt';
+  downloadLink.click();
 }
 
 function decodeFinish() {
-  //Call on ajax return for decode finish
-  //link -- backend/output_decode.txt
+  // Perform actions after decode completion
+  var downloadLink = document.createElement('a');
+  downloadLink.href = 'backend/output_decode.txt';
+  downloadLink.download = 'decompressed_file.txt';
+  downloadLink.click();
 }
